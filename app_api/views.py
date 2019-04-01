@@ -39,5 +39,5 @@ class PushApiTwo(View):
             statues["IsInsideString"] = str(park_data.inside)
             statues["CarLicenseString"] = str(park_data.license_number)
             park_list[i + 1] = statues
-        context = dict_to_xml(park_list, "baspools", "car")
+        context = dict_to_xml(park_list, "park", "car")
         return HttpResponse(context, content_type="text/xml")
