@@ -18,3 +18,13 @@ class AntiPark(models.Model):
 
     class Meta:
         db_table = "anti_park"
+
+
+class ParkTwo(models.Model):
+    park_id = models.AutoField(primary_key=True)
+    inside = models.IntegerField(default=None, null=True)
+    license_number = models.CharField(max_length=10, null=True)
+    create_time = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        db_table = "park_two"
