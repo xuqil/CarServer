@@ -41,3 +41,12 @@ class PushApiTwo(View):
             park_list[i + 1] = statues
         context = dict_to_xml(park_list, "park", "car")
         return HttpResponse(context, content_type="text/xml")
+
+
+def check(request):
+    license_number = request.GET.get("license_number")
+    result = ParkTwo.objects.filter(license_number=license_number).first()
+    if result:
+        return HttpResponse(1)
+    else:
+        return HttpResponse(0)

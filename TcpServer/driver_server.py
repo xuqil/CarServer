@@ -1,4 +1,5 @@
 import socketserver
+from TcpServer.request_http import check_car
 
 
 class MyServer(socketserver.BaseRequestHandler):
@@ -8,11 +9,9 @@ class MyServer(socketserver.BaseRequestHandler):
         while True:
             try:
                 data = conn.recv(1024).decode()
-                if data == "exit":
-                    print("断开与%s的连接！" % (self.client_address,))
-                    break
                 print("来自%s的客户端向你发来信息：%s" % (self.client_address, data))
-                conn.sendall('ACK'.encode())
+                result = check_car(data)
+                conn.sendall(result.encode())
             except ConnectionResetError:
                 pass
 
