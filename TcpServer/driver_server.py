@@ -20,6 +20,8 @@ class MyServer(socketserver.BaseRequestHandler):
                 conn.sendall(result.encode())
             except ConnectionResetError:
                 pass
+            except Exception as e:
+                pass
 
 
 server = socketserver.ThreadingTCPServer(('127.0.0.1', 71), MyServer)
