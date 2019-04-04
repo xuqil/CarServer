@@ -3,7 +3,7 @@ import urllib.request
 
 
 def check_car(license_number):
-    url = 'http://127.0.0.1:8000/check/?license_number=' + license_number
+    url = 'http://127.0.0.1:72/check/?license_number=' + license_number
     req = urllib.request.Request(url)
     return urllib.request.urlopen(req).read().decode("utf-8")
 
@@ -22,6 +22,6 @@ class MyServer(socketserver.BaseRequestHandler):
                 pass
 
 
-server = socketserver.ThreadingTCPServer(('127.0.0.1', 9999), MyServer)
+server = socketserver.ThreadingTCPServer(('127.0.0.1', 71), MyServer)
 print("启动socketserver服务器！")
 server.serve_forever()
