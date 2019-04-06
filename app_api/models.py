@@ -32,7 +32,7 @@ class ParkTwo(models.Model):
 
 class Card(models.Model):
     card_id = models.AutoField(primary_key=True)
-    card_number = models.IntegerField(default=None, unique=True)
+    card_number = models.CharField(default=None, unique=True, max_length=25)
 
     class Meta:
         db_table = "card"
