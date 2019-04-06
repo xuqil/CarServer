@@ -33,13 +33,14 @@ class PushApi(View):
 class PushApiTwo(View):
     def get(self, request):
         park_list = {}
-        count = ParkTwo.objects.all().count()
-        for i in range(count):
-            statues = {}
-            park_data = ParkTwo.objects.filter(park_id=i + 1).first()
-            statues["IsInsideString"] = str(park_data.inside)
-            statues["CarLicenseString"] = str(park_data.license_number)
-            park_list[i + 1] = statues
+        park = ParkTwo.objects.all()
+        n = 0
+        for i in park:
+            n += 1
+            statues = dict()
+            statues["IsInsideString"] = str(i.inside)
+            statues["CarLicenseString"] = str(i.license_number)
+            park_list[n + 1] = statues
         context = dict_to_xml(park_list, "park", "car")
         return HttpResponse(context, content_type="text/xml")
 
