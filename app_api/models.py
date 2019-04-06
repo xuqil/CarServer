@@ -22,9 +22,18 @@ class AntiPark(models.Model):
 
 class ParkTwo(models.Model):
     park_id = models.AutoField(primary_key=True)
-    inside = models.IntegerField(default=None, null=True)
-    license_number = models.CharField(max_length=10, null=True)
+    inside = models.IntegerField(default=1, null=True)
+    license_number = models.CharField(max_length=10, null=True, unique=True)
     create_time = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         db_table = "park_two"
+
+
+class Card(models.Model):
+    card_id = models.AutoField(primary_key=True)
+    card_number = models.IntegerField(default=None, unique=True)
+
+    class Meta:
+        db_table = "card"
+

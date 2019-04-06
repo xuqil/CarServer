@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from .models import Park, AntiPark, ParkTwo
+from .models import Park, AntiPark, ParkTwo, Card
 from django.views import View
+from datetime import datetime
 
 from .utils import dict_to_xml
 
@@ -50,3 +51,33 @@ def check(request):
         return HttpResponse(1)
     else:
         return HttpResponse(0)
+
+
+def add_car(request):
+    inside = request.POST.get("inside")
+    license_number = request.POST.get("license_number")
+    if ParkTwo.objects.filter(license_number=license_number).first() is None:
+        ParkTwo().objects.create(inside=inside, license_number=license_number,
+                                 create_time=datetime.now())
+        return HttpResponse("添加成功")
+    else:
+        return HttpResponse("车牌已存在")
+
+
+def add_card(request):
+    card_number = request.POST.get("card_number")
+    if Card.objects.filter(card_number=card_number).first() is None:
+        Card.objects.create(card_number=card_number)
+        return HttpResponse("添加成功")
+    else:
+        return HttpResponse("已存在")
+
+
+def check_card(request):
+    card_number = request.GET.get("card_number")
+    result = Card.objects.filter(card_number=card_number).first()
+    if result:
+        return HttpResponse(1)
+    else:
+        return HttpResponse(0)
+
