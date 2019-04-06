@@ -4,13 +4,13 @@ import time
 
 
 def check_car(license_number):
-    url = 'http://127.0.0.1:72/check/?license_number=' + license_number
+    url = 'http://127.0.0.1:72/check/?license_number=' + urllib.parse.quote(license_number)
     req = urllib.request.Request(url)
     return urllib.request.urlopen(req).read().decode("utf-8")
 
 
 def check_card(card_number):
-    url = 'http://127.0.0.1:72/check_card/?card_number=' + card_number
+    url = 'http://127.0.0.1:72/check_card/?card_number=' + urllib.parse.quote(card_number)
     req = urllib.request.Request(url)
     return urllib.request.urlopen(req).read().decode("utf-8")
 
@@ -18,7 +18,7 @@ def check_card(card_number):
 class MyServer(socketserver.BaseRequestHandler):
     def handle(self):
         conn = self.request
-        conn.sendall("ACK".encode())
+        # conn.sendall("ACK".encode())
         while True:
             try:
                 data = conn.recv(1024).decode()

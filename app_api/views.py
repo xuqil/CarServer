@@ -57,8 +57,8 @@ def add_car(request):
     inside = request.POST.get("inside")
     license_number = request.POST.get("license_number")
     if ParkTwo.objects.filter(license_number=license_number).first() is None:
-        ParkTwo().objects.create(inside=inside, license_number=license_number,
-                                 create_time=datetime.now())
+        ParkTwo.objects.create(inside=inside, license_number=license_number,
+                               create_time=datetime.now())
         return HttpResponse("添加成功")
     else:
         return HttpResponse("车牌已存在")
