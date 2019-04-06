@@ -73,6 +73,24 @@ def add_card(request):
         return HttpResponse("已存在")
 
 
+def delete_car(request):
+    license_number = request.GET.get("license_number")
+    if ParkTwo.objects.filter(license_number=license_number).first() is None:
+        return HttpResponse("该车牌不存在")
+    else:
+        ParkTwo.objects.filter(license_number=license_number).delete()
+        return HttpResponse("车牌删除成功！")
+
+
+def delete_card(request):
+    card_number = request.GET.get("card_number")
+    if Card.objects.filter(card_number=card_number).first() is None:
+        return HttpResponse(" 该卡号不存在！")
+    else:
+        Card.objects.filter(card_number=card_number).delete()
+        return HttpResponse("卡号删除成功")
+
+
 def check_card(request):
     card_number = request.GET.get("card_number")
     result = Card.objects.filter(card_number=card_number).first()

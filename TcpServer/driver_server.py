@@ -10,6 +10,7 @@ def check_car(license_number):
 
 
 def check_card(card_number):
+
     url = 'http://127.0.0.1:72/check_card/?card_number=' + urllib.parse.quote(card_number)
     req = urllib.request.Request(url)
     return urllib.request.urlopen(req).read().decode("utf-8")

@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from app_api.views import PushApi, PushApiTwo, check, check_card, add_car, add_card
+from app_api.views import PushApi, PushApiTwo, check, check_card, add_car, add_card, delete_car, delete_card
 
 urlpatterns = [
     path("push_api/", PushApi.as_view()),
@@ -23,4 +23,6 @@ urlpatterns = [
     path("check_card/", check_card),
     path("add_car/", add_car),
     path("add_card/", add_card),
+    path("delete_car/", delete_car),
+    path("delete_card/", delete_card),
 ]
