@@ -100,3 +100,33 @@ def check_card(request):
     else:
         return HttpResponse(0)
 
+
+total = 50
+
+
+class ParkSubtract(View):
+    def get(self, request):
+        global total
+        total -= 1
+        if total >= 0:
+            return HttpResponse(total)
+        else:
+            total = 0
+            return HttpResponse(0)
+
+
+class ParkAdd(View):
+    def get(self, request):
+        global total
+        total += 1
+        if total <= 50:
+            return HttpResponse(total)
+        else:
+            total = 50
+            return HttpResponse(50)
+
+
+class Pace(View):
+    def get(self, request):
+        global total
+        return HttpResponse(total)
