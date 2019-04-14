@@ -130,3 +130,42 @@ class Pace(View):
     def get(self, request):
         global total
         return HttpResponse(total)
+
+
+class ParkingNow(View):
+    def get(self, request):
+        park_list = {}
+        park = ParkTwo.objects.all()
+        n = 0
+        for i in park:
+            n += 1
+            statues = dict()
+            statues["IsInsideString"] = str(i.inside)
+            statues["CarLicenseString"] = str(i.license_number)
+            park_list[n + 1] = statues
+        context = dict_to_xml(park_list, "park", "car")
+        return HttpResponse(context, content_type="text/xml")
+
+
+class EnterCar(View):
+    def get(self, request):
+        FreshStateString = 0
+        CarLicenseString = '京 A21222'
+        IsInsideString = 1
+        status = dict()
+        status["FreshStateString"] = str(FreshStateString)
+        status["CarLicenseString"] = CarLicenseString
+        status["IsInsideString"] = str(IsInsideString)
+        car_list = dict()
+        car_list[1] = status
+        context = dict_to_xml(car_list, "park", "car")
+        return HttpResponse(context, content_type="text/xml")
+
+
+class OpenDoor(View):
+    def post(self, request):
+        open_door = request.POST.get("opendoor")
+        if open_door == "open":
+            return HttpResponse(1)
+        else:
+            return HttpResponse(0)

@@ -28,4 +28,7 @@ urlpatterns = [
     path("park_total", views.Pace.as_view()),
     path("park_add", views.ParkAdd.as_view()),
     path("park_subtract", views.ParkSubtract.as_view()),
+    path("parkingnow/", views.ParkingNow.as_view()),
+    path("entercar/", views.EnterCar.as_view()),
+    path("opendoor/", views.OpenDoor.as_view()),
 ]
