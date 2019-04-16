@@ -29,7 +29,7 @@ class ParkTwo(models.Model):
     class Meta:
         db_table = "park_two"
         ordering = ['-create_time']
-        verbose_name = u"校内车牌表"
+        verbose_name = u"校内车牌库存"
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -42,7 +42,7 @@ class Card(models.Model):
 
     class Meta:
         db_table = "card"
-        verbose_name = u"卡号表"
+        verbose_name = u"卡号"
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -58,8 +58,22 @@ class InPark(models.Model):
     class Meta:
         db_table = "in_park"
         ordering = ['-create_time']
-        verbose_name = u"校内停车场表"
+        verbose_name = u"校内临时停车场"
         verbose_name_plural = verbose_name
 
     def __str__(self):
         return self.license_number
+
+
+class Total(models.Model):
+    in_park = models.IntegerField(default=0, verbose_name=u"已用车位数量")
+    out_park = models.IntegerField(default=100, verbose_name=u"剩余车位数量")
+    total = models.IntegerField(default=100, verbose_name=u"车位总数")
+
+    class Meta:
+        db_table = "total_park"
+        verbose_name = u"停车场车位数量管理"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return str(self.id)
