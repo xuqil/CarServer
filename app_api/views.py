@@ -1,7 +1,8 @@
 from django.http import HttpResponse
-from .models import Park, AntiPark, ParkTwo, Card
+from .models import Park, AntiPark, ParkTwo, Card, InPark
 from django.views import View
 from datetime import datetime
+import time
 
 from .utils import dict_to_xml
 
@@ -45,10 +46,23 @@ class PushApiTwo(View):
         return HttpResponse(context, content_type="text/xml")
 
 
+license_number_card = None
+add_flag = False
+add_time = None
+
+
 def check(request):
     license_number = request.GET.get("license_number")
+    global license_number_card
+    global add_flag
+    global add_time
+    add_time = time.time()
+    license_number_card = license_number
+    add_flag = True
     result = ParkTwo.objects.filter(license_number=license_number).first()
     if result:
+        InPark.objects.create(inside=1, license_number=license_number,
+                              create_time=datetime.now())
         return HttpResponse(1)
     else:
         return HttpResponse(0)
@@ -95,13 +109,23 @@ def delete_card(request):
 def check_card(request):
     card_number = request.GET.get("card_number")
     result = Card.objects.filter(card_number=card_number).first()
+    global add_flag
+    global license_number_card
     if result:
-        return HttpResponse(1)
+        if add_flag and not InPark.objects.filter(license_number=license_number_card).first():
+            InPark.objects.create(inside=1, license_number=license_number_card,
+                                  create_time=datetime.now())
+            add_flag = False
+            return HttpResponse(1)
+        else:
+            license_number_card = None
+            return HttpResponse(0)
     else:
+        license_number_card = None
         return HttpResponse(0)
 
 
-total = 50
+total = 100
 
 
 class ParkSubtract(View):
@@ -119,11 +143,11 @@ class ParkAdd(View):
     def get(self, request):
         global total
         total += 1
-        if total <= 50:
+        if total <= 100:
             return HttpResponse(total)
         else:
-            total = 50
-            return HttpResponse(50)
+            total = 100
+            return HttpResponse(100)
 
 
 class Pace(View):
@@ -135,7 +159,7 @@ class Pace(View):
 class ParkingNow(View):
     def get(self, request):
         park_list = {}
-        park = ParkTwo.objects.all()
+        park = InPark.objects.all()
         n = 0
         for i in park:
             n += 1
@@ -149,12 +173,21 @@ class ParkingNow(View):
 
 class EnterCar(View):
     def get(self, request):
+        global license_number_card
+        global add_time
         FreshStateString = 0
-        CarLicenseString = '京 A21222'
-        IsInsideString = 1
+        CarLicenseString = 0
+        IsInsideString = 0
+        print(time.time())
+        print(add_time)
+        if InPark.objects.filter(license_number=license_number_card).first() and ((time.time() - add_time) <= 120):
+            FreshStateString = 1
+            CarLicenseString = license_number_card
+            if ParkTwo.objects.filter(license_number=license_number_card).first():
+                IsInsideString = 1
         status = dict()
         status["FreshStateString"] = str(FreshStateString)
-        status["CarLicenseString"] = CarLicenseString
+        status["CarLicenseString"] = str(CarLicenseString)
         status["IsInsideString"] = str(IsInsideString)
         car_list = dict()
         car_list[1] = status
@@ -169,3 +202,12 @@ class OpenDoor(View):
             return HttpResponse(1)
         else:
             return HttpResponse(0)
+
+
+def delete_car_out(request):
+    license_number = request.GET.get("license_number")
+    if InPark.objects.filter(license_number=license_number).first() is None:
+        return HttpResponse("0")
+    else:
+        InPark.objects.filter(license_number=license_number).delete()
+        return HttpResponse("1")

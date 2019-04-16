@@ -31,4 +31,5 @@ urlpatterns = [
     path("parkingnow/", views.ParkingNow.as_view()),
     path("entercar/", views.EnterCar.as_view()),
     path("opendoor/", views.OpenDoor.as_view()),
+    path("delete_car_out", views.delete_car_out),
 ]

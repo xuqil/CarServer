@@ -37,3 +37,12 @@ class Card(models.Model):
     class Meta:
         db_table = "card"
 
+
+class InPark(models.Model):
+    park_id = models.AutoField(primary_key=True)
+    inside = models.IntegerField(default=1, null=True)
+    license_number = models.CharField(max_length=10, null=True, unique=True)
+    create_time = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        db_table = "in_park"
