@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import ParkTwo, Card, InPark
 
-# Register your models here.
+
+admin.site.register(ParkTwo)
+admin.site.register(Card)
+admin.site.register(InPark)
