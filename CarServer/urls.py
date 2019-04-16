@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app_api import views
+from CarServer.settings import MEDIA_ROOT
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +38,6 @@ urlpatterns = [
     path("entercar/", views.EnterCar.as_view()),
     path("opendoor/", views.OpenDoor.as_view()),
     path("delete_car_out", views.delete_car_out),
-]
+    path('media/<int:path>/', serve, {"document_root": MEDIA_ROOT}),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
