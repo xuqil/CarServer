@@ -1,4 +1,4 @@
-from .models import ParkTwo, Card, InPark, Total
+from .models import ParkTwo, Card, InPark, Total, OpenOrder
 
 from django.contrib.auth.models import User
 from django.contrib.admin import AdminSite
@@ -16,3 +16,4 @@ admin_site.register(Card)
 admin_site.register(InPark)
 admin_site.register(User)
 admin_site.register(Total)
+admin_site.register(OpenOrder)

@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .models import Park, AntiPark, ParkTwo, Card, InPark, Total
+from .models import Park, AntiPark, ParkTwo, Card, InPark, Total, OpenOrder
 from django.views import View
 from datetime import datetime
 import time
@@ -64,7 +64,7 @@ def check(request):
         license_number_card = license_number
         add_flag = True
         result = ParkTwo.objects.filter(license_number=license_number).first()
-        if result:
+        if result and not InPark.objects.filter(license_number=license_number).first():
             InPark.objects.create(inside=1, license_number=license_number,
                                   create_time=datetime.now())
             return HttpResponse(1)
@@ -175,6 +175,11 @@ class Pace(View):
         return HttpResponse(Total.objects.first().total)
 
 
+class CarTotalInPark(View):
+    def get(self, request):
+        return HttpResponse(Total.objects.first().in_park)
+
+
 class ParkingNow(View):
     def get(self, request):
         park_list = {}
@@ -197,8 +202,6 @@ class EnterCar(View):
         FreshStateString = 0
         CarLicenseString = 0
         IsInsideString = 0
-        print(time.time())
-        print(add_time)
         if InPark.objects.filter(license_number=license_number_card).first() and ((time.time() - add_time) <= 120):
             FreshStateString = 1
             CarLicenseString = license_number_card
@@ -220,9 +223,11 @@ class OpenDoor(View):
         if open_door is None:
             return HttpResponse("error")
         if open_door == "open":
-            with open("/www/wwwroot/CarServer/open.txt", 'w') as file:
-                file.write('1')
-            return HttpResponse(1)
+            try:
+                OpenOrder.objects.filter(order_id=1).update(order=True)
+                return HttpResponse(1)
+            except Exception:
+                return HttpResponse(0)
         else:
             return HttpResponse(0)
 

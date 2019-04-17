@@ -1,4 +1,12 @@
 import socketserver
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from TcpServer.DB.DatabaseModel import OpenOrder
+import time
+
+engine = create_engine('sqlite:///F:\资料\广电设\CarServer\db.sqlite3', encoding='utf8')
+DBSession = sessionmaker(engine)
+session = DBSession()
 
 
 class MyServer(socketserver.BaseRequestHandler):
@@ -9,13 +17,15 @@ class MyServer(socketserver.BaseRequestHandler):
         conn = self.request
         while True:
             try:
-                # data = conn.recv(1024).decode()
-                with open("/www/wwwroot/CarServer/open.txt", 'r') as file:
-                    result = file.read()
-                if result == '1':
-                    with open("/www/wwwroot/CarServer/open.txt", 'w') as file:
-                        file.write('0')
-                    conn.sendall(result.encode())
+                time.sleep(3)
+                print("ok")
+                result = session.query(OpenOrder).filter(OpenOrder.order_id == 1).first().order
+                print(result)
+                if result:
+                    session.query(OpenOrder).filter(OpenOrder.order_id == 1).update({'order': 0})
+                    session.commit()
+                    print("ok2")
+                    conn.sendall(str(result).encode())
             except Exception:
                 pass
 

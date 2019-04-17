@@ -38,6 +38,7 @@ urlpatterns = [
     path("entercar/", views.EnterCar.as_view()),
     path("opendoor/", views.OpenDoor.as_view()),
     path("delete_car_out", views.delete_car_out),
+    path("totalInPark", views.CarTotalInPark.as_view()),
     path('media/<int:path>/', serve, {"document_root": MEDIA_ROOT}),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -77,3 +77,16 @@ class Total(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class OpenOrder(models.Model):
+    order_id = models.AutoField(primary_key=True, verbose_name=u"开闸指令ID")
+    order = models.IntegerField(default=0, verbose_name=u"开闸指令")
+
+    class Meta:
+        db_table = "open_order"
+        verbose_name = u"开闸指令管理"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return str(self.order_id)
