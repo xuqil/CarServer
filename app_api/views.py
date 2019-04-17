@@ -220,6 +220,8 @@ class OpenDoor(View):
         if open_door is None:
             return HttpResponse("error")
         if open_door == "open":
+            with open("F:\资料\广电设\CarServer\open.txt", 'w') as file:
+                file.write('1')
             return HttpResponse(1)
         else:
             return HttpResponse(0)
