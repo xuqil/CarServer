@@ -4,7 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from TcpServer.DB.DatabaseModel import OpenOrder
 import time
 
-engine = create_engine('sqlite:///F:\资料\广电设\CarServer\db.sqlite3', encoding='utf8')
+# engine = create_engine('sqlite:///F:\资料\广电设\CarServer\db.sqlite3', encoding='utf8')
+engine = create_engine('sqlite:////www/wwwroot/CarServer/db.sqlite3', encoding='utf8')
 DBSession = sessionmaker(engine)
 session = DBSession()
 
