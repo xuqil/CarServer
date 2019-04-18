@@ -242,3 +242,13 @@ def delete_car_out(request):
         else:
             InPark.objects.filter(license_number=license_number).delete()
             return HttpResponse("1")
+
+
+class OrderOpen(View):
+    def get(self, request):
+        order = OpenOrder.objects.filter(order_id=1).first().order
+        if order:
+            OpenOrder.objects.filter(order_id=1).update(order=False)
+            return HttpResponse(1)
+        else:
+            return HttpResponse(0)

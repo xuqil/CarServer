@@ -4,8 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from TcpServer.DB.DatabaseModel import OpenOrder
 import time
 
-# engine = create_engine('sqlite:///F:\资料\广电设\CarServer\db.sqlite3', encoding='utf8')
-engine = create_engine('sqlite:////www/wwwroot/CarServer/db.sqlite3', encoding='utf8')
+engine = create_engine('sqlite:///F:\资料\广电设\CarServer\db.sqlite3', encoding='utf8')
+# engine = create_engine('sqlite:////www/wwwroot/CarServer/db.sqlite3', encoding='utf8')
 DBSession = sessionmaker(engine)
 session = DBSession()
 
@@ -18,15 +18,19 @@ class MyServer(socketserver.BaseRequestHandler):
         conn = self.request
         while True:
             try:
-                time.sleep(3)
-                print("ok")
-                result = session.query(OpenOrder).filter(OpenOrder.order_id == 1).first().order
-                print(result)
-                if result:
-                    session.query(OpenOrder).filter(OpenOrder.order_id == 1).update({'order': 0})
-                    session.commit()
-                    print("ok2")
-                    conn.sendall(str(result).encode())
+                data = conn.recv(1024).decode()
+                if data:
+                    time.sleep(3)
+                    print("ok")
+                    result = session.query(OpenOrder).filter(OpenOrder.order_id == 1).first().order
+                    print(result)
+                    if result:
+                        session.query(OpenOrder).filter(OpenOrder.order_id == 1).update({'order': 0})
+                        session.commit()
+                        print("ok2")
+                        conn.sendall(str(result).encode())
+                else:
+                    break
             except Exception:
                 pass
 
