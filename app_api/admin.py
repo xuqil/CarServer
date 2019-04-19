@@ -1,19 +1,33 @@
 from .models import ParkTwo, Card, InPark, Total, OpenOrder
 
-from django.contrib.auth.models import User
-from django.contrib.admin import AdminSite
 from django.utils.translation import ugettext_lazy
+from django.contrib import admin
 
 
-class MyAdminSite(AdminSite):
-    site_title = ugettext_lazy("校园停车场管理系统")
-    site_header = ugettext_lazy("校园停车场管理系统")
+class ParkTwoAdmin(admin.ModelAdmin):
+    list_display = ('park_id', 'inside', 'license_number', 'create_time')
 
 
-admin_site = MyAdminSite()
-admin_site.register(ParkTwo)
-admin_site.register(Card)
-admin_site.register(InPark)
-admin_site.register(User)
-admin_site.register(Total)
-admin_site.register(OpenOrder)
+class CardAdmin(admin.ModelAdmin):
+    list_display = ('card_id', 'card_number')
+
+
+class InParkAdmin(admin.ModelAdmin):
+    list_display = ('park_id', 'inside', 'license_number', 'create_time')
+
+
+class TotalAdmin(admin.ModelAdmin):
+    list_display = ('in_park', 'out_park', 'total')
+
+
+class OpenOrderAdmin(admin.ModelAdmin):
+    list_display = ('order_id', 'order')
+
+
+admin.site.site_title = ugettext_lazy("校园停车场管理系统")
+admin.site.site_header = ugettext_lazy("校园停车场管理系统")
+admin.site.register(ParkTwo, ParkTwoAdmin)
+admin.site.register(Card, CardAdmin)
+admin.site.register(InPark, InParkAdmin)
+admin.site.register(Total, TotalAdmin)
+admin.site.register(OpenOrder, OpenOrderAdmin)

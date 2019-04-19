@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from app_api import admin
+from django.contrib import admin
 from django.urls import path
 from app_api import views
 from CarServer.settings import MEDIA_ROOT
@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from django.views.static import serve
 
 urlpatterns = [
-    path('admin/', admin.admin_site.urls),
+    path('admin/', admin.site.urls),
     path("push_api/", views.PushApi.as_view()),
     path("push_api_two/", views.PushApiTwo.as_view()),
     path("check/", views.check),

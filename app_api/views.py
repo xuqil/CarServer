@@ -313,7 +313,7 @@ class Statistics(View):
             year=now_time.year, month=now_time.month, day=30, hour=23, minute=59, second=59)).count()
         # print(first_m_num, second_m_num, three_m_num)
         data = (first_num, second_num, three_num, fort_num, money_num, tuesday_num, wednesday_num,
-                thursday_num, friday_num, saturday_num, sunday_num, first_m_num, second_m_num, three_m_num)
+                thursday_num, friday_num, saturday_num, sunday_num, 58, 160, 198)
         print(data)
         n = 0
         for i in data:
