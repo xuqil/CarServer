@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from .models import Park, AntiPark, ParkTwo, Card, InPark, Total, OpenOrder
 from django.views import View
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from django.db.models import F
 
@@ -252,3 +252,74 @@ class OrderOpen(View):
             return HttpResponse(1)
         else:
             return HttpResponse(0)
+
+
+class Statistics(View):
+    def get(self, request):
+        park_list = {}
+        now_time = datetime.now()
+
+        # 获取一天内某时间段的数据
+        one_num = InPark.objects
+        first_num = one_num.filter(
+            create_time__gte=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=0, minute=0, second=0)
+        ).filter(create_time__lt=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=6, minute=0, second=0)).count()
+        second_num = one_num.filter(
+            create_time__gte=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=6, minute=0, second=0)
+        ).filter(create_time__lt=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=12, minute=0, second=0)).count()
+        three_num = one_num.filter(
+            create_time__gte=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=12, minute=0, second=0)
+        ).filter(create_time__lt=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=18, minute=0, second=0)).count()
+        fort_num = one_num.filter(
+            create_time__gte=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=18, minute=0, second=0)
+        ).filter(create_time__lt=datetime(
+                year=now_time.year, month=now_time.month, day=now_time.day, hour=23, minute=59, second=59)).count()
+        # print(first_num, second_num, three_num, fort_num)
+
+        # 获取最近一周内星期一二三四五六七的数据
+        one_week_day = (now_time + timedelta(-7))
+        week_num = InPark.objects.filter(create_time__gt=one_week_day)
+        money_num = week_num.filter(create_time__week_day=2).count()
+        tuesday_num = week_num.filter(create_time__week_day=3).count()
+        wednesday_num = week_num.filter(create_time__week_day=4).count()
+        thursday_num = week_num.filter(create_time__week_day=5).count()
+        friday_num = week_num.filter(create_time__week_day=6).count()
+        saturday_num = week_num.filter(create_time__week_day=7).count()
+        sunday_num = week_num.filter(create_time__week_day=1).count()
+        # print(money_num, tuesday_num, wednesday_num, thursday_num, friday_num, saturday_num, sunday_num)
+
+        # 获取本月内某时间段的数据
+        first_m_num = one_num.filter(
+            create_time__gte=datetime(
+                year=now_time.year, month=now_time.month, day=1, hour=0, minute=0, second=0)
+        ).filter(create_time__lt=datetime(
+                year=now_time.year, month=now_time.month, day=10, hour=23, minute=59, second=59)).count()
+        second_m_num = one_num.filter(
+            create_time__gte=datetime(
+                year=now_time.year, month=now_time.month, day=10, hour=0, minute=0, second=0)
+        ).filter(create_time__lt=datetime(
+            year=now_time.year, month=now_time.month, day=20, hour=23, minute=59, second=59)).count()
+        three_m_num = one_num.filter(
+            create_time__gte=datetime(
+                year=now_time.year, month=now_time.month, day=20, hour=0, minute=0, second=0)
+        ).filter(create_time__lt=datetime(
+            year=now_time.year, month=now_time.month, day=30, hour=23, minute=59, second=59)).count()
+        # print(first_m_num, second_m_num, three_m_num)
+        data = (first_num, second_num, three_num, fort_num, money_num, tuesday_num, wednesday_num,
+                thursday_num, friday_num, saturday_num, sunday_num, first_m_num, second_m_num, three_m_num)
+        print(data)
+        n = 0
+        for i in data:
+            n += 1
+            statues = dict()
+            statues["parkingnum"] = str(i)
+            park_list[n + 1] = statues
+        context = dict_to_xml(park_list, "park", "car")
+        return HttpResponse(context, content_type="text/xml")
